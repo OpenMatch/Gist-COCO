@@ -1,7 +1,7 @@
-# NeuScraper
+# Gist-COCO
 
 Source code for our paper :  
-***Cleaner Pretraining Corpus Curation with Neural Web Scraping***
+***Say More with Less: Understanding Prompt Learning Behaviors through Gist Compression***
 
 If you find this work useful, please cite our paper  and give us a shining star 🌟
 
@@ -9,121 +9,91 @@ If you find this work useful, please cite our paper  and give us a shining star 
 
 ## Quick Start
 
-**1️⃣ Clone from git**
+**1. Clone from git**
 
 ```bash
-git clone https://github.com/OpenMatch/NeuScraper
+git clone https://github.com/OpenMatch/Gist-COCO
 cd NeuScraper
 ```
 
-**2️⃣ Data**
-
-ClueWeb22 is the newest in the Lemur Project's ClueWeb line of datasets that support research on information retrieval, natural language processing and related human language technologies. 
-
-The ClueWeb22 datasets are distributed by Carnegie Mellon University for research purposes only. A dataset may be obtained by signing a data license agreement with Carnegie Mellon University, and paying a fee that covers the cost of distributing the dataset. For details on how to get it, please click the following link:
-
-```bash
-https://www.lemurproject.org/clueweb22/obtain.php
+**2. Data**
+Our data consists of two parts, the first part is the training data used to train the Gist-COCO model: `train`, and the second part is the test data used for the two compression scenarios: `passage` and `instruction`.
+```
+data/
+├──train/
+│   ├── train_data.json
+│   ├── dev_data.json
+├──passage/
+│   ├── popqa_top10.jsonl
+│   ├── nq_dev_ance_wiki_top10.jsonl
+│   ├── triviaqa_dev_ance_wiki_top10.jsonl
+│   ├── hotpotqa_dev_ance_wiki_top10.jsonl
+└──instruction/
+    ├── alpaca_plus_validation_seen.json
+	 ├── alpaca_plus_validation_unseen.json
+    └── alpaca_plus_validation_human.json
 ```
 
-**3️⃣ Environment**
+**3. Requirement**
 
-Install the `torch` first :
-
-```bash
-pip install torch==1.9.1+cu111 torchvision==0.10.1+cu111 torchaudio==0.9.1 -f https://download.pytorch.org/whl/torch_stable.html
-```
-
-Install other packages :
-
-```bash
-pip install -r requirements.txt
-```
-
-
-
-## Reproduction
-
-**1️⃣ Download checkpoint for NeuScraper**
+ * Install the following packages using Pip or Conda under this environment.
 
 ```
-We'll release checkpoints on 🤗HuggingFace this week
+Python==3.8.16
+Pytorch
+transformers==4.29.0
+tqdm
+numpy==1.23.5
+Install openmatch-thunlp from https://github.com/OpenMatch/OpenMatch
 ```
 
-**2️⃣ Preprocess the test data, we use the** `en0001-01` **as our test set.**
-
-```bash
-python src/build_test.py \
-		--path /path/to/clueweb22
+ * Download the following language models for subsequent training and inference.
+```
+Flant5-base/large
+Llama-7b/13b
+Llama2-7b-hf
 ```
 
-**3️⃣ Scraping with NeuScraper**
+## Train Gist-COCO
+**1. Training**
+We use the data in the data/train file to train Gist-COCO. These data are all collected from the  `Nvi2 ` data, and we use  `T5ance ` to retrieve relevant passages from  `MS MARCO ` for the passage compression task:
 
-```bash
-bash scripts/inference.sh
+```
+cd scripts
+bash train.sh
 ```
 
-**4️⃣ Test on** `en0001-01`
+**2. Get Checkpoint**
+Based on the output log obtained from the training, the checkpoint with the smallest dev loss is selected for inference.
 
-```bash
-python src/eval/run_eval.py
+## Evaluate Gist-COCO
+**1. Different Prompt Compression**
+We test the performance of Gist-COCO on different prompt compression tasks.
+* Passage Compression:
+ 
+```
+cd scripts
+bash test_passage.sh
 ```
 
-
-
-## Main Result 
-
-The results are shown as follows.
-
-| **Method**     | **Acc.**  | **Prec.** | **Rec.**  | **F1**    |
-| -------------- | --------- | --------- | --------- | --------- |
-| htmlparser     | 40.94     | 40.92     | 98.95     | 57.90     |
-| bs4            | 41.07     | 41.05     | **99.94** | 58.20     |
-| html2text      | 40.09     | 39.40     | 85.40     | 53.92     |
-| boilerpipe     | 66.28     | 66.89     | 35.52     | 46.40     |
-| jusText        | 62.67     | 72.49     | 27.06     | 39.41     |
-| lxml           | 65.45     | 61.54     | 37.82     | 46.84     |
-| inscriptis     | 45.06     | 42.53     | 96.43     | 59.03     |
-| readability    | 68.26     | 72.08     | 37.01     | 48.91     |
-| trafilatura    | 70.57     | 66.60     | 56.77     | 61.30     |
-| **NeuScraper** | **86.66** | **81.15** | 88.30     | **84.58** |
-
-
-
-## Train NeuScraper from scratch 
-
-***Note:** Training NeuScraper from scratch needs to be done on a server equipped with 8 NVIDIA A100-40G GPUs and SSDs*
-
-1️⃣ **We need to preprocess the pages in Clueweb22:**
-
-```bash
-python src/build_train.py \
-		--path /path/to/clueweb22
+* Instruction Compression:
+```
+cd scripts
+bash test_instruction.sh
 ```
 
-This command will place the processed data in `data/train`.  
-It need to slice some of them up and put them in `data/val`.
+**2. Generalze to Different LLMs**
+We test the generalisation ability of Gist-COCO on different LLMs.
 
-2️⃣ **Run the following script to start training**
-
-```bash
-bash scripts/train.sh
+* Get gist prompts for two different compression tasks:
+```
+cd scripts
+bash get_passage_gist_prompt.sh
+bash get_instruction_gist_prompt.sh
 ```
 
-The training process will run for 30 epochs and take about 40 hours. 
-
-
-
-## CommonCrawl Support
-
-We will add support for CommonCrwal in two months.
-
-
-
-## Contact Us
-
-If you have questions, suggestions, and bug reports, please send a email to us, we will try our best to help you. 
-
-```bash
-xuzhipeng@stumail.neu.edu.cn  
+*  Use gist prompt instead of the original prompt to test the compression ability of Gist-COCO. We have detailed instructions in the script for different compression tasks and different LLMs:
+```
+cd scripts
+bash generalize_test.sh
 ```

@@ -142,18 +142,19 @@ def call_model(prompt, model, tokenizer, device, auxiliary_model,max_new_tokens=
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model_name', type=str, default='/data4/flan-t5/flan-t5-large')
-    parser.add_argument('--input_file', type=str,default='/data1/lixinze/gist/ours/test_kilt/new-retriever/ra_ance_kilt_wiki/nq_dev_ance_wiki_top10.jsonl')
-    parser.add_argument('--auxiliary_model', type=str, default="/data3/lixinze/compression_model/task_knowledge_prompt/ACL_compression/main_two/flant5_large_new_instruction_data_10/flan-t5/checkpoint-44000")
+    parser.add_argument('--input_file', type=str,default=None)
+    parser.add_argument('--auxiliary_model', type=str, default=None)
     parser.add_argument('--device', type=str, default="cuda")
-    parser.add_argument('--output_path', type=str, default="/data3/lixinze/compression_model/task_knowledge_prompt/ACL_compression/open_code_check/nq_5p.jsonl")
+    parser.add_argument('--output_path', type=str, default=None)
     parser.add_argument('--max_new_tokens', type=int, default=15)
     parser.add_argument('--prompt_k', type=int, default=10)
     parser.add_argument('--num_passage', type=int, default=5)
     parser.add_argument('--batch_size', type=int, default=8)
 
     args = parser.parse_args()
+    args_dict = vars(args)
     device = args.device
+    print(args_dict)
 
     prompt_k = args.prompt_k
     auxiliary_model = Label_prompt_T5ForConditionalGeneration.from_pretrained(args.auxiliary_model).eval().to(device)
@@ -174,7 +175,6 @@ def main():
 
     chunk_size = 256
 
-
     d = MultiEncoderDataset(
         data_path=input_path,
         tokenizer=auxiliary_tokenizer,
@@ -182,8 +182,6 @@ def main():
         num_passage=args.num_passage
     )
 
-
-    device = "cuda"
     my_collate = d.my_collate
     dataloader = DataLoader(d, batch_size=args.batch_size, shuffle=False, collate_fn=my_collate)
 

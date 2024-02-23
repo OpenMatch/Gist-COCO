@@ -1,17 +1,12 @@
 import argparse
-from transformers import AutoTokenizer,AutoModelForSeq2SeqLM,trainer
-import pandas as pd
+from transformers import AutoTokenizer
 from tqdm import tqdm
-import json
 import torch
-from label_prompt_model import Label_prompt_T5ForConditionalGeneration
-from T5_passage_decoder import deT5ForConditionalGeneration
+from ..model.label_prompt_model import Label_prompt_T5ForConditionalGeneration
 import numpy as np
 import os
 from transformers.modeling_outputs import (
     BaseModelOutput,
-    BaseModelOutputWithPastAndCrossAttentions,
-    Seq2SeqLMOutput,
 )
 import jsonlines
 
@@ -155,11 +150,12 @@ def postprocess_text(preds, labels, remove_llama_padding=False):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input_file', type=str,default='/data1/lixinze/gist/ours/task_knowledge_prompt/decoder_generation/gisting/alpaca_plus/alpaca_plus_validation_unseen.json')
-    parser.add_argument('--auxiliary_model', type=str, default="/data3/lixinze/compression_model/task_knowledge_prompt/ACL_compression/main_two/flant5_large_new_instruction_data_10/flan-t5/checkpoint-44000")
+    parser.add_argument('--input_file', type=str,default=None)
+    parser.add_argument('--auxiliary_model', type=str, default=None)
     parser.add_argument('--device', type=str, default="cuda")
-    parser.add_argument('--output_path', type=str, default="/data3/lixinze/compression_model/task_knowledge_prompt/ACL_compression/open_code_check/unseen.json")
+    parser.add_argument('--output_path', type=str, default=None)
     parser.add_argument('--max_new_tokens', type=int, default=32)
+    parser.add_argument('--batch_size', type=int, default=16)
     parser.add_argument('--prompt_k', type=int, default=10)
 
 
@@ -194,10 +190,7 @@ def main():
         tokenizer=auxiliary_tokenizer,
         chunk_size=chunk_size,
     )
-
-    batch_size = 16
-    device = "cuda"
-    dataloader = DataLoader(d, batch_size=batch_size, shuffle=False, collate_fn=d.my_collate)
+    dataloader = DataLoader(d, batch_size=args.batch_size, shuffle=False, collate_fn=d.my_collate)
 
 
     prompt_k=prompt_k

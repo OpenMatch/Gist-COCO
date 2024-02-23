@@ -159,23 +159,20 @@ def postprocess_text(preds, labels, remove_llama_padding=False):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', type=str, default='/data4/flan-t5/flan-t5-large')
-    parser.add_argument('--input_file', type=str,default='/data1/lixinze/gist/ours/task_knowledge_prompt/decoder_generation/gisting/alpaca_plus/alpaca_plus_validation_seen.json')
-    parser.add_argument('--auxiliary_model', type=str, default="/data3/lixinze/compression_model/task_knowledge_prompt/ACL_compression/main_two/flant5_large_new_instruction_data_10/flan-t5/checkpoint-44000")
+    parser.add_argument('--model', type=str, default=None)
+    parser.add_argument('--input_file', type=str,default=None)
+    parser.add_argument('--auxiliary_model', type=str, default=None)
     parser.add_argument('--device', type=str, default="cuda")
     parser.add_argument('--max_new_tokens', type=int, default=32)
     parser.add_argument('--compression', type=bool, default=True)
     parser.add_argument('--use_instruct', type=bool, default=True)
-
     parser.add_argument('--prompt_k', type=int, default=10)
     parser.add_argument('--batch_size', type=int, default=16)
-
-
-
 
     args = parser.parse_args()
     args_dict = vars(args)
     device = args.device
+    print(args_dict)
 
     prompt_k = args.prompt_k
     auxiliary_model = Label_prompt_T5ForConditionalGeneration.from_pretrained(args.auxiliary_model).eval().to(
@@ -193,15 +190,11 @@ def main():
 
     model = deT5ForConditionalGeneration.from_pretrained(args.model).eval().to(device)
     tokenizer = AutoTokenizer.from_pretrained(args.model)
-
     print('model is load...')
-
     input_path = args.input_file
     print('data is load...')
 
     chunk_size = 1024
-
-
 
     d = MultiEncoderDataset(
         data_path=input_path,
@@ -209,13 +202,7 @@ def main():
         chunk_size=chunk_size,
         args = args
     )
-
-
-    device = "cuda"
     dataloader = DataLoader(d, batch_size=args.batch_size, shuffle=False, collate_fn=d.my_collate)
-
-
-
 
     rougeL = []
     results = {}
@@ -286,7 +273,7 @@ def main():
     all_pred=sum(all_pred, [])
     all_labels = sum(all_labels, [])
 
-    rouge_results = evaluate.load("../evaluate_metrics/rouge").compute(
+    rouge_results = evaluate.load("./inference/evaluate_metrics/rouge").compute(
         predictions=all_pred, references=all_labels, use_stemmer=True
     )
     rouge_results = {k: round(v * 100, 4) for k, v in rouge_results.items()}

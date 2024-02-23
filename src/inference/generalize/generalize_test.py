@@ -1,25 +1,19 @@
 import argparse
-from transformers import AutoTokenizer,AutoModelForSeq2SeqLM,trainer,OPTForCausalLM,AutoModelForCausalLM
+from transformers import AutoModelForCausalLM
 from tqdm import tqdm
 import torch
 import numpy as np
-
 import nltk
 import random
-
 seed = 42
 random.seed(seed)
 np.random.seed(seed)
 torch.manual_seed(seed)
 torch.cuda.manual_seed_all(seed)
-
-
 import datetime
 import json
-import math
 from concurrent.futures.process import ProcessPoolExecutor
 import jsonlines
-import torch
 from torch.utils.data.dataset import Dataset
 from transformers import PreTrainedTokenizerBase,LlamaTokenizer,LlamaForCausalLM
 from torch.utils.data import DataLoader
@@ -185,12 +179,8 @@ class MultiEncoderDataset(Dataset):
         else:
             if self.data_type =='instruction':
                 now_passage = self.instruction_templete.format_map(dict(input=query))
-
             else:
                 now_passage = query
-
-
-
 
         return {
             'now_passage': now_passage ,
@@ -232,8 +222,8 @@ def get_gold_answers(gold):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model_name', type=str, default='/data4/LLaMA/llama-7b')
-    parser.add_argument('--input_file', type=str,default="/data3/lixinze/compression_model/task_knowledge_prompt/ACL_compression/open_code_check/unseen.json")
+    parser.add_argument('--model_name', type=str, default=None)
+    parser.add_argument('--input_file', type=str,default=None)
     parser.add_argument('--device', type=str, default="cuda")
     parser.add_argument('--data_type', type=str, default="instruction_compress")
     parser.add_argument('--num_passage', type=int, default=5)
@@ -333,9 +323,8 @@ def main():
 
         all_pred = sum(all_pred, [])
         all_labels = sum(all_labels, [])
-
         rouge_results = evaluate.load(
-            "/data1/lixinze/gist/ours/task_knowledge_prompt/decoder_generation/gisting/evaluate-main/evaluate-main/metrics/rouge").compute(
+            "./inference/evaluate_metrics/rouge").compute(
             predictions=all_pred, references=all_labels, use_stemmer=True
         )
         rouge_results = {k: round(v * 100, 4) for k, v in rouge_results.items()}

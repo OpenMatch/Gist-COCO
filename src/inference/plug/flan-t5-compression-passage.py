@@ -157,25 +157,21 @@ def call_model(prompt, model, tokenizer, device, auxiliary_model,max_new_tokens=
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', type=str, default='/data4/flan-t5/flan-t5-large')
-    parser.add_argument('--input_file', type=str,default='/data1/lixinze/gist/ours/test_kilt/new-retriever/ra_ance_kilt_wiki/nq_dev_ance_wiki_top10.jsonl')
-    parser.add_argument('--auxiliary_model', type=str, default="/data3/lixinze/compression_model/task_knowledge_prompt/ACL_compression/main_two/flant5_large_new_instruction_data_10/flan-t5/checkpoint-44000")
+    parser.add_argument('--model', type=str, default=None)
+    parser.add_argument('--input_file', type=str,default=None)
+    parser.add_argument('--auxiliary_model', type=str, default=None)
     parser.add_argument('--device', type=str, default="cuda")
     parser.add_argument('--max_new_tokens', type=int, default=15)
     parser.add_argument('--num_passage', type=int, default=5)
     parser.add_argument('--batch_size', type=int, default=16)
     parser.add_argument('--prompt_k', type=int, default=10)
-
     parser.add_argument('--compression', type=bool, default=True)
     parser.add_argument('--with_passage', type=bool, default=True)
-
-
-
 
     args = parser.parse_args()
     args_dict = vars(args)
     device = args.device
-
+    print(args_dict)
 
     prompt_k = args.prompt_k
     auxiliary_model = Label_prompt_T5ForConditionalGeneration.from_pretrained(args.auxiliary_model).eval().to(
@@ -193,9 +189,7 @@ def main():
 
     model = deT5ForConditionalGeneration.from_pretrained(args.model).eval().to(device)
     tokenizer = AutoTokenizer.from_pretrained(args.model)
-
     print('model is load...')
-
 
     input_path = args.input_file
     print('data is load...')
@@ -205,8 +199,6 @@ def main():
     else:
         chunk_size = 2048
 
-
-
     d = MultiEncoderDataset(
         args=args,
         data_path=input_path,
@@ -214,10 +206,7 @@ def main():
         chunk_size=chunk_size,
         num_passage=args.num_passage
     )
-
-    device = "cuda"
     dataloader = DataLoader(d, batch_size=args.batch_size, shuffle=False, collate_fn=d.my_collate)
-
 
     accuracy = []
     prompt_k = prompt_k * 2
@@ -225,10 +214,7 @@ def main():
     for idd, batch in enumerate(tqdm(dataloader)):
         batch['input_ids'] = batch['input_ids'].to(device)
         batch['attention_mask'] = batch['attention_mask'].to(device)
-
         if args.compression == True:
-
-
             with torch.no_grad():
                 # T5 encoder to decoder
                 decoder_input_ids = torch.zeros((batch['input_ids'].shape[0], 1), dtype=torch.long)

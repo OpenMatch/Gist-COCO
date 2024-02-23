@@ -1,4 +1,4 @@
-export COMPRESSION_MODEL=/data3/lixinze/compression_model/task_knowledge_prompt/ACL_compression/main_two/flant5_large_new_instruction_data_10/flan-t5/checkpoint-44000
+export COMPRESSION_MODEL=/data/flan-t5/checkpoint-44000
 export instruction_data=alpaca_plus_validation_human.json
 #instruction_data is seen, unseen or human.
 # COMPRESSION_MODEL is the path of the checkpoint of Gist-COCO

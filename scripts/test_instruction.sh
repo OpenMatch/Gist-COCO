@@ -1,5 +1,5 @@
 export MODEL_PATH=/data4/flan-t5/flan-t5-large
-export COMPRESSION_MODEL=/data3/lixinze/compression_model/task_knowledge_prompt/ACL_compression/open_code_check/flan-t5/checkpoint-44000
+export COMPRESSION_MODEL=/data/flan-t5/checkpoint-44000
 export instruction_data=alpaca_plus_validation_unseen.json
 #instruction_data is seen, unseen or human.
 # MODEL_PATH is FlanT5

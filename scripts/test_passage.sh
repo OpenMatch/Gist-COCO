@@ -1,5 +1,5 @@
 export MODEL_PATH=/data4/flan-t5/flan-t5-large
-export COMPRESSION_MODEL=/data3/lixinze/compression_model/task_knowledge_prompt/ACL_compression/main_two/flant5_large_new_instruction_data_10/flan-t5/checkpoint-44000
+export COMPRESSION_MODEL=/data/flan-t5/checkpoint-44000
 export passage_data=nq_dev_ance_wiki_top10.jsonl 
 #passage_data is popqa, nq, triviaqa or hotpotqa.
 # MODEL_PATH is FlanT5

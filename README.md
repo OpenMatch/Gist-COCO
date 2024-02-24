@@ -5,19 +5,18 @@ Source code for our paper :
 
 If you find this work useful, please cite our paper  and give us a shining star 🌟
 
-
-
 ## Quick Start
 
 **1. Clone from git**
-
 ```bash
 git clone https://github.com/OpenMatch/Gist-COCO
 cd Gist-COCO
 ```
 
 **2. Data**
-Our data consists of two parts, the first part is the training data used to train the Gist-COCO model: `train`, and the second part is the test data used for the two compression scenarios: `passage` and `instruction`.
+Our data consists of two parts, the first part is the training data used to train the Gist-COCO model: `train`, and the second part is the test data used for the two compression scenarios: `passage` and `instruction`. 
+Once you have downloaded the data, you need to store them in the  `data` folder in the following format. All data is stored [here](https://drive.google.com/drive/folders/1Xu9vOPOtv5S3JLiPEB8MAfYsARVQXP5N?usp=sharing).
+
 ```
 data/
 ├──train/
@@ -25,12 +24,12 @@ data/
 │   ├── dev_data.json
 ├──passage/
 │   ├── popqa_top10.jsonl
-│   ├── nq_dev_ance_wiki_top10.jsonl
-│   ├── triviaqa_dev_ance_wiki_top10.jsonl
-│   ├── hotpotqa_dev_ance_wiki_top10.jsonl
+│   ├── nq_top10.jsonl
+│   ├── triviaqa_top10.jsonl
+│   ├── hotpotqa_top10.jsonl
 └──instruction/
     ├── alpaca_plus_validation_seen.json
-	 ├── alpaca_plus_validation_unseen.json
+	├── alpaca_plus_validation_unseen.json
     └── alpaca_plus_validation_human.json
 ```
 
@@ -44,6 +43,11 @@ Pytorch
 transformers==4.29.0
 tqdm
 numpy==1.23.5
+torch==2.0.1
+protobuf==3.20.3
+jsonlines==3.1.0
+nltk==3.8.1
+evaluate==0.3.0
 Install openmatch-thunlp from https://github.com/OpenMatch/OpenMatch
 ```
 

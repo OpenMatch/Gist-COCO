@@ -1,1 +1,1 @@
-### This is the test data for training Gist-COCO
+### This is the train data for training Gist-COCO

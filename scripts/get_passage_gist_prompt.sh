@@ -1,5 +1,5 @@
 export COMPRESSION_MODEL=/data/flan-t5/checkpoint-44000
-export passage_data=nq_dev_ance_wiki_top10.jsonl
+export passage_data=nq_top10.jsonl
 #passage_data is popqa, nq, triviaqa or hotpotqa.
 # COMPRESSION_MODEL is the path of the checkpoint of Gist-COCO
 mkdir -p ../data/output_data

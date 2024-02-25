@@ -5,6 +5,22 @@ Source code for our paper :
 
 If you find this work useful, please cite our paper  and give us a shining star 🌟
 
+## Overview
+Gist-COCO is a novel method for compressing prompts. Gist-COCO employs an encoder-decoder based language model and then incorporates an additional encoder as a plugin module to compress prompts with inputs using gist tokens. It finetunes the compression plugin module and uses the representations of gist tokens to emulate the raw prompts in the vanilla language model. By verbalizing the representations of gist tokens into gist prompts, the compression ability of Gist-COCO can be generalized to different LLMs. 
+
+**1. The inference process of Gist-COCO**
+<p align="center">
+  <img align="middle" src="fig/fig1.gif" style="max-width: 70%; height: auto;" alt="ActiveRAG"/>
+</p>
+
+
+**2. The generalisation of Gist-COCO**
+<p align="center">
+  <img align="middle" src="fig/fig2.gif" style="max-width: 70%; height: auto;" alt="ActiveRAG"/>
+</p>
+
+
+
 ## Quick Start
 
 **1. Clone from git**
@@ -67,8 +83,11 @@ cd scripts
 bash train.sh
 ```
 
-**2. Get Checkpoint**
+**2. Get Best Checkpoint**
 Based on the output log obtained from the training, the checkpoint with the smallest dev loss is selected for inference.
+
+**3. Download Checkpoint**
+You can download the trained checkpoint from  [here](https://huggingface.co/OpenMatch/Gist-COCO/upload/main).
 
 ## Evaluate Gist-COCO
 **1. Different Prompt Compression**
@@ -100,4 +119,12 @@ bash get_instruction_gist_prompt.sh
 ```
 cd scripts
 bash generalize_test.sh
+```
+
+## Contact Us
+
+If you have questions, suggestions, and bug reports, please send a email to us, we will try our best to help you. 
+
+```bash
+lxzlxz0716@gmail.com  
 ```

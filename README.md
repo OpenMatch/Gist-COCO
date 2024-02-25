@@ -10,13 +10,13 @@ Gist-COCO is a novel method for compressing prompts. Gist-COCO employs an encode
 
 **1. The inference process of Gist-COCO**
 <p align="center">
-  <img align="middle" src="fig/fig1.gif" style="max-width: 70%" alt="ActiveRAG"/>
+  <img align="middle" src="fig/fig1.gif" width = "200" alt="ActiveRAG"/>
 </p>
 
 
 **2. The generalisation of Gist-COCO**
 <p align="center">
-  <img align="middle" src="fig/fig2.gif" style="max-width: 70%" alt="ActiveRAG"/>
+  <img align="middle" src="fig/fig2.gif" width = "200" alt="ActiveRAG"/>
 </p>
 
 

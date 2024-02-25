@@ -90,7 +90,7 @@ Based on the output log obtained from the training, the checkpoint with the smal
 
 **3. Download Checkpoint**
 
-You can download the trained checkpoint from  [here](https://huggingface.co/OpenMatch/Gist-COCO/upload/main).
+You can download the trained checkpoint from  [here](https://huggingface.co/OpenMatch/Gist-COCO/tree/main).
 
 ## Evaluate Gist-COCO
 **1. Different Prompt Compression**

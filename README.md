@@ -76,6 +76,7 @@ Llama2-7b-hf
 
 ## Train Gist-COCO
 **1. Training**
+
 We use the data in the data/train file to train Gist-COCO. These data are all collected from the  `Nvi2 ` data, and we use  `T5ance ` to retrieve relevant passages from  `MS MARCO ` for the passage compression task:
 
 ```
@@ -84,13 +85,16 @@ bash train.sh
 ```
 
 **2. Get Best Checkpoint**
+
 Based on the output log obtained from the training, the checkpoint with the smallest dev loss is selected for inference.
 
 **3. Download Checkpoint**
+
 You can download the trained checkpoint from  [here](https://huggingface.co/OpenMatch/Gist-COCO/upload/main).
 
 ## Evaluate Gist-COCO
 **1. Different Prompt Compression**
+
 We test the performance of Gist-COCO on different prompt compression tasks.
 * Passage Compression:
  
@@ -106,6 +110,7 @@ bash test_instruction.sh
 ```
 
 **2. Generalze to Different LLMs**
+
 We test the generalisation ability of Gist-COCO on different LLMs.
 
 * Get gist prompts for two different compression tasks:

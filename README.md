@@ -1,6 +1,6 @@
 # Gist-COCO
 
-Source code for our paper :  
+Source code for our [paper](https://arxiv.org/abs/2402.16058) :  
 ***Say More with Less: Understanding Prompt Learning Behaviors through Gist Compression***
 
 If you find this work useful, please cite our paper  and give us a shining star 🌟
